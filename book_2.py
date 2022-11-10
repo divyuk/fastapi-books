@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status, Form
 from pydantic import BaseModel, Field
 from uuid import UUID
 from typing import Optional
@@ -55,6 +55,12 @@ class BookNoRating(BaseModel):
 
 BOOKS = []
 
+#Some apps use form to transfer data
+@app.post("/books/login")
+async def login(username:str=Form(),password:str=Form()):
+    return {"username" : username, "password" : password}
+
+
 @app.get("/")
 async def read_all_books(books_to_return : Optional[int] = None):
     if books_to_return and books_to_return<0:
@@ -95,7 +101,7 @@ async def update_book(book_id:UUID , book : Book):
             return BOOKS[counter-1]
     raise raise_item_cannot_be_found_exception()
 
-@app.post("/")
+@app.post("/" , status_code=status.HTTP_201_CREATED)
 async def create_book(book:Book):
     BOOKS.append(book)
     return book
