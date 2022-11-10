@@ -5,4 +5,4 @@ In this project we will create a simple web framework to perform the crud operat
 #### We will be doing 
 ![image](assests/1.jpg)
 #### The Crud Operations
-![image](assests/2.png)
+<img src= "assests/2.png" width="647" height="343">
