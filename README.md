@@ -22,7 +22,7 @@ In this we will create a todo app with database.
 There will be two tables one for user and other for to-do.
 
 #### The table structure
-<img src= "assests/4.png" width="647" height="343">
+<img src= "assests/4.png" width="447" height="400">
 
 ### The Flow
 * API using Request methods
