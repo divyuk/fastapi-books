@@ -39,5 +39,21 @@ async def get_direction(direction_name: DirectionName):
     return {"Direction"  : direction_name, "sub" : "right"}
 
 @app.get("/{book_name}")
-async def  read_book(book_name:str):
+async def read_book(book_name:str):
     return BOOKS[book_name]
+
+@app.post("/")
+async def create_book(book_title,book_author):
+    current_book_id = 0
+    if len(BOOKS) >0:
+        last_book = list(BOOKS)[-1]
+        book_id = int(last_book.split('_')[-1])
+        current_book_id = book_id
+    BOOKS[f"book_{current_book_id+1}" ] = {"title" : book_title , "author" : book_author}
+    return BOOKS[f"book_{current_book_id+1}"]
+
+@app.put("/{book_name}")
+async def update_book(book_name:str, book_title:str, book_author:str):
+    book_information = {'title': book_title, 'author': book_author }
+    BOOKS[book_name] = book_information
+    return book_information
