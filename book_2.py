@@ -15,6 +15,21 @@ class Book(BaseModel):
     author : str = Field(min_length=1,max_length=100)
     description :Optional[str] = Field(title="Desciption of the bool", max_length=100, min_length=1)
     rating : int = Field(gt=-1,lt=101)
+    
+    class Config:
+        """
+            Changing the default configuration of the examples
+            Config name should only be used.
+        """
+        schema_extra = {
+            "example" : {
+                "id" : "3536ce71-3be5-49b1-acde-6ba50f62448d",
+                "title" : "Unstoppable Us",
+                "author" : "Yuval",
+                "description" : "How Humans conquer the land",
+                "rating" : 85
+            }
+        }
 
 BOOKS = []
 
