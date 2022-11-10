@@ -1,9 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from uuid import UUID
 from typing import Optional
+from starlette.responses import JSONResponse
+# A Custom application class for handling Exception
+class NegativeNumberException(Exception):
+    def __init__(self, books_to_return) -> None:
+        self.books_to_return = books_to_return
 
 app = FastAPI()
+
+@app.exception_handler(NegativeNumberException)
+async def negative_number_exception_handler(request:Request, 
+                                            exception: NegativeNumberException):
+    return JSONResponse(
+        status_code=418,
+        content={"message" : f"This doesnt make sense, Negative Number {exception.books_to_return}"}
+    )
 
 class Book(BaseModel):
     """
@@ -35,6 +48,9 @@ BOOKS = []
 
 @app.get("/")
 async def read_all_books(books_to_return : Optional[int] = None):
+    if books_to_return and books_to_return<0:
+        raise NegativeNumberException(books_to_return=books_to_return)
+    
     if len(BOOKS)<1:
         create_books_no_api()
     if books_to_return and len(BOOKS) >= books_to_return > 0:
@@ -51,7 +67,7 @@ async def read_book(book_id:UUID):
     for x in BOOKS:
         if x.id == book_id:
             return x
-
+    raise raise_item_cannot_be_found_exception()
 
 @app.put("/{book_id}")
 async def update_book(book_id:UUID , book : Book):
@@ -61,6 +77,7 @@ async def update_book(book_id:UUID , book : Book):
         if x.id == book_id:
             BOOKS[counter-1] = book
             return BOOKS[counter-1]
+    raise raise_item_cannot_be_found_exception()
 
 @app.post("/")
 async def create_book(book:Book):
@@ -76,6 +93,8 @@ async def delete_book(book_id : UUID):
             del BOOKS[counter-1]
             return f'ID : {book_id} deleted'
     
+    # if the book id is not there then raise an exception
+    raise raise_item_cannot_be_found_exception()
     
 def create_books_no_api():
     book_1 = Book(id="cadb9626-3bad-42e6-8c47-23837b1b9194",
@@ -103,3 +122,9 @@ def create_books_no_api():
     BOOKS.append(book_2)
     BOOKS.append(book_3)
     BOOKS.append(book_4)
+    
+
+def raise_item_cannot_be_found_exception():
+    raise HTTPException(status_code=404,detail="Book not found",
+                        headers={"X-Header-Error":
+                            "Nothing to be seen at the UUID"})
