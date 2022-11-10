@@ -32,7 +32,7 @@ There will be two tables one for user and other for to-do.
 
 APIs for various CRUD operations
 
-<img src= "assests/5.png" width="647" height="343">
+<img src= "assests/6.png" width="647" height="343">
 
 * User needs to login
 * Once our algorithm verifies the user we send JWT
