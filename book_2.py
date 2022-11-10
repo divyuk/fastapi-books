@@ -43,6 +43,15 @@ class Book(BaseModel):
                 "rating" : 85
             }
         }
+        
+class BookNoRating(BaseModel):
+    """
+    This is for response model and when this class is being referred the rating option is eleminated.
+    """
+    id : UUID
+    title : str = Field(min_length=1)
+    author : str = Field(min_length=1,max_length=100)
+    description :Optional[str] = Field(title="Desciption of the bool", max_length=100, min_length=1)
 
 BOOKS = []
 
@@ -64,6 +73,13 @@ async def read_all_books(books_to_return : Optional[int] = None):
 
 @app.get("/book/{book_id}")
 async def read_book(book_id:UUID):
+    for x in BOOKS:
+        if x.id == book_id:
+            return x
+    raise raise_item_cannot_be_found_exception()
+
+@app.get("/book/rating/{book_id}", response_model=BookNoRating)
+async def read_book_no_rating(book_id:UUID):
     for x in BOOKS:
         if x.id == book_id:
             return x
