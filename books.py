@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from typing import Optional
 from enum import Enum
 app = FastAPI()
 BOOKS = {
@@ -16,12 +17,12 @@ class DirectionName(str,Enum):
     west  = "West"
 
 @app.get("/")
-async def read_all_books():
+async def read_all_books(skip_book :Optional[str] = None):
+    if skip_book:
+        new_books = BOOKS.copy()
+        del new_books[skip_book]
+        return new_books
     return BOOKS
-
-@app.get("/books/{book_id}")
-async def read_book(book_id : int):
-    return  {"book_title" : book_id}
 
 @app.get("/books/mybook")
 async def read_favourite_book():
@@ -36,3 +37,7 @@ async def get_direction(direction_name: DirectionName):
     if direction_name == DirectionName.west:
         return {"Direction"  : direction_name, "sub" : "left"}
     return {"Direction"  : direction_name, "sub" : "right"}
+
+@app.get("/{book_name}")
+async def  read_book(book_name:str):
+    return BOOKS[book_name]
