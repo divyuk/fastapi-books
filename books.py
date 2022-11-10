@@ -38,7 +38,7 @@ async def get_direction(direction_name: DirectionName):
         return {"Direction"  : direction_name, "sub" : "left"}
     return {"Direction"  : direction_name, "sub" : "right"}
 
-@app.get("/{book_name}")
+@app.get("/particular/")
 async def read_book(book_name:str):
     return BOOKS[book_name]
 
