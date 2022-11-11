@@ -21,6 +21,10 @@ In this we will create a todo app with database.
 
 There will be two tables one for user and other for to-do.
 
+DBMS used : SQLite
+
+SQLAlchemy : SQLAlchemy is an open-source SQL toolkit and object-relational mapper for the Python programming
+
 #### The table structure
 <img src= "assests/4.png" width="447" height="400">
 
